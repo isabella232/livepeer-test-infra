@@ -1,0 +1,74 @@
+{{- $root := . -}}
+{{- $protocol := .Values.rtmp -}}
+
+{{- range $protocol.streams }}
+{{- $stream := . -}}
+{{- $data := (dict "root" $root "stream" $stream "protocol" $protocol)  -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streamer.streamName" $data }}
+  labels:
+    {{- include "streamer.labels" $ | nindent 4 }}
+    {{- include "streamer.rtmpSelectorLabels" $data | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "streamer.rtmpSelectorLabels" $data | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "streamer.rtmpSelectorLabels" $data | nindent 8 }}
+      annotations:
+        prometheus.io/{{ $.Values.global.promKubeScrape | default "scrape" }}: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: "{{ $protocol.image.repository }}:{{ $protocol.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $protocol.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          command:
+            - /app/bin/stream-monitor
+          args:
+            - -rtmp-url
+            - {{ $stream.ingest_url }}
+            - -media-url
+            - {{ $stream.playback_url }}
+            - -v
+            - "1"
+            - -time
+            - {{ $stream.duration }}
+            - -ignore-time-drift
+            - -ignore-gaps
+            - -wait-for-target
+            - 120s
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}

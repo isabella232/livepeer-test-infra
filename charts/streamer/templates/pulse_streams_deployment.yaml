@@ -1,0 +1,79 @@
+{{- $root := . -}}
+{{- $protocol := .Values.pulse -}}
+
+{{- range $protocol.streams }}
+{{- $stream := . -}}
+{{- $data := (dict "root" $root "stream" $stream "protocol" $protocol)  -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "streamer.streamName" $data }}
+  labels:
+    {{- include "streamer.labels" $ | nindent 4 }}
+    {{- include "streamer.streamerLabels" $data | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "streamer.streamerLabels" $data | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "streamer.streamerLabels" $data | nindent 8 }}
+      annotations:
+        prometheus.io/{{ $.Values.global.promKubeScrape | default "scrape" }}: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: "{{ $protocol.image.repository }}:{{ $protocol.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $protocol.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          command:
+            - ./bin/pulse-stream
+          env:
+            - name: LIVEPEER_API_KEY
+              value: {{ $protocol.livepeer_api_key | quote }}
+            - name: LIVEPEER_API_HOST
+              value: {{ $protocol.livepeer_api_host | quote }}
+            - name: HLS_ANALYZER_API_KEY
+              value: {{ $protocol.hlsanalyzer_api_key | quote }}
+            - name: HLS_ANALYZER_API_HOST
+              value: {{ $protocol.hlsanalyzer_api_host | quote }}
+            - name: DISCORD_WEBHOOK
+              value: {{ $protocol.discord_webhook | quote }}
+            - name: PLAYBACK_REGION
+              value: {{ $stream.playback_region }}
+            - name: INGEST_REGION
+              value: {{ $stream.ingest_region }}
+            - name: BROADCAST_DURATION
+              value: {{ $stream.broadcast_duration | quote }}
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
