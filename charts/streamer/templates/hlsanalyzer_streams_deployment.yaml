@@ -67,6 +67,7 @@ spec:
               value: {{ $stream.monitor_delay | quote }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
+      terminationGracePeriodSeconds: 60
       {{- with $.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
