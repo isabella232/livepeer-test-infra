@@ -88,6 +88,9 @@ hlsanalyzer:
 
   discord_webhook: ""
 
+  pager_duty_api_key: ""
+  pager_duty_component: "long-cycle"
+
   # The test streams to run in this release. Configuration can be provided as an array
   # with the following item schema
   #
@@ -105,6 +108,9 @@ pulse:
   livepeer_api_host:
 
   discored_webhook:
+
+  pager_duty_api_key: ""
+  pager_duty_component: "short-cycle"
 
   # The test streams to run in this release. Configuration can be provided as an array
   # with the following item schema

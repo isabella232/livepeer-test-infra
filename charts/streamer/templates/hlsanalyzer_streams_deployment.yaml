@@ -63,8 +63,12 @@ spec:
               value: {{ $stream.ingest_region | quote }}
             - name: BROADCAST_DURATION
               value: {{ $stream.broadcast_duration | quote }}
-            - name: MONITOR_DELAY
-              value: {{ $stream.monitor_delay | quote }}
+            - name: BOOT_DELAY
+              value: {{ $stream.boot_delay | quote }}
+            - name: PAGER_DUTY_API_KEY
+              value: {{ $protocol.pager_duty_api_key | quote }}
+            - name: PAGER_DUTY_COMPONENT
+              value: {{ $protocol.pager_duty_component | quote }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
       terminationGracePeriodSeconds: 60
