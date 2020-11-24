@@ -11,4 +11,17 @@ entries:
     urls:
     - https://github.com/livepeer/livepeer-test-infra/releases/download/logging-0.2.0/logging-0.2.0.tgz
     version: 0.2.0
+  streamer:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-11-24T16:32:12.215264898Z"
+    description: |
+      Tests streams e2e through livepeer and surfaces metrics to
+      prometheus
+    digest: 8ac3de699eec94af383fad038baef1f93128278f8cf8b1f509270fd0703705c7
+    name: streamer
+    type: application
+    urls:
+    - https://github.com/livepeer/livepeer-test-infra/releases/download/streamer-0.2.0/streamer-0.2.0.tgz
+    version: 0.2.0
 generated: "2020-11-24T16:29:24.734083826Z"
