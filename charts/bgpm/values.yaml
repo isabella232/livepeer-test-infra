@@ -1,0 +1,4 @@
+name: bgpm
+serviceAccount: bgpm
+role: bgpm-service-reader
+clusterRole: bgpm-node-manager

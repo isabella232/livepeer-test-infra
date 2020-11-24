@@ -1,0 +1,19 @@
+The monitors will need to use the service account created by this release. To get
+the token for this service account you can run the following:
+
+```
+# get token for services account
+token=$(kubectl get sa -n {{ .Release.Namespace }} {{ .Values.serviceAccount }} -o=jsonpath '{.secrets[0].name}' -r)
+kubectl describe secret -n {{ .Release.Namespace }} $token
+```
+
+Then add a user to the kubeconfig bgpm uses to monitor this cluster. Be sure to
+reference it in the context as well.
+
+```
+# add the token to kubeconfig for monitors
+users:
+- name: bgpm
+  user:
+    token: <token>
+```
