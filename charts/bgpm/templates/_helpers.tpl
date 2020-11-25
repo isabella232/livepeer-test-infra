@@ -17,9 +17,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Exporter Selector labels
 */}}
-{{- define "bgpm.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Values.name }}
+{{- define "bgpm.exporterSelectorLabels" -}}
+app.kubernetes.io/name: {{ .Values.name }}-exporter
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Monitor Selector labels
+*/}}
+{{- define "bgpm.testerSelectorLabels" -}}
+app.kubernetes.io/name: {{ .Values.name }}-selector
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

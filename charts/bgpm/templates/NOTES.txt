@@ -1,3 +1,4 @@
+{{- if .Values.installExporter -}}
 The monitors will need to use the service account created by this release. To get
 the token for this service account you can run the following:
 
@@ -7,13 +8,38 @@ token=$(kubectl get sa -n {{ .Release.Namespace }} {{ .Values.serviceAccount }} 
 kubectl describe secret -n {{ .Release.Namespace }} $token
 ```
 
-Then add a user to the kubeconfig bgpm uses to monitor this cluster. Be sure to
-reference it in the context as well.
+Use the above token to create add a user to the kubeconfig used to access the
+monitored cluster.
+
+Replace the following:
+- cluster-ca-data
+- cluster-api
+- service-account-token
 
 ```
 # add the token to kubeconfig for monitors
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: <cluster-ca-data>
+    server: <cluster-api>
+  name: default
+contexts:
+- context:
+    cluster: default
+    user: bgpm
+  name: default
 users:
 - name: bgpm
   user:
-    token: <token>
+    token: <service-account-token>
+current-context: default
+```
+
+{{- end -}}
+
+# kubeconfigs for the monitors can be added with commands like:
+```
+kubectl create secret generic {{ .Values.name }}-<cluster-name> \
+  --from-file=config=./path/to/service-account/kubeconfig \
 ```

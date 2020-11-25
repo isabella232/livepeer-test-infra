@@ -2,3 +2,16 @@ name: bgpm
 serviceAccount: bgpm
 role: bgpm-service-reader
 clusterRole: bgpm-node-manager
+
+discord_webhook: ""
+pager_duty_api_key: ""
+
+image:
+  repository: livepeerci/bgpm
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+installExporter: false
+
+# adding a cluster implies we want to install monitors
+clusters: []
