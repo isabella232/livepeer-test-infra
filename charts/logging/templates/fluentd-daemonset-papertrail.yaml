@@ -30,11 +30,11 @@ spec:
         imagePullPolicy: Always
         env:
           - name: FLUENT_PAPERTRAIL_HOST
-            value: 'logs4.papertrailapp.com'
+            value: {{ .Values.papertrailHost }}
           - name: FLUENT_PAPERTRAIL_PORT
-            value: '32071'
+            value: {{ .Values.papertrailPort }}
           - name: FLUENT_HOSTNAME
-            value: 'e2e-gke-us-east'
+            value: {{ .Values.fluentHostname }}
           - name: K8S_NODE_NAME
             valueFrom:
               fieldRef:
