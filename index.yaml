@@ -27,6 +27,16 @@ entries:
   logging:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-11-25T18:51:56.415236782Z"
+    description: A Helm chart for Kubernetes
+    digest: 4da487842e61f803dd3d68ebf02122cf41de67e8a16db1b6621558c0b97ec9be
+    name: logging
+    type: application
+    urls:
+    - https://github.com/livepeer/livepeer-test-infra/releases/download/logging-0.3.0/logging-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-11-24T16:29:24.88045017Z"
     description: A Helm chart for Kubernetes
     digest: 90e7854f8f7617017cd2349141f38ffc127149c86969b4c8fd6b357d4f3e067e
