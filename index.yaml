@@ -3,6 +3,16 @@ entries:
   bgpm:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-11-25T19:24:35.194394801Z"
+    description: A chart of livepeer's bgpm monitors and exporters
+    digest: 53741f339e82f69dacfe23c94b8bc21008cab40b459012bfca4f4041e7058cd8
+    name: bgpm
+    type: application
+    urls:
+    - https://github.com/livepeer/livepeer-test-infra/releases/download/bgpm-0.3.0/bgpm-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-11-25T01:12:53.822937465Z"
     description: A chart of livepeer's bgpm monitors and exporters
     digest: 15ed1888d4c5ae3c21f66c30b666c4bd94655bfb829618a4e82b486a3ced308e
