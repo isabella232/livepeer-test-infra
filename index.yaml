@@ -3,6 +3,16 @@ entries:
   bgpm:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-11-25T01:12:53.822937465Z"
+    description: A chart of livepeer's bgpm monitors and exporters
+    digest: 15ed1888d4c5ae3c21f66c30b666c4bd94655bfb829618a4e82b486a3ced308e
+    name: bgpm
+    type: application
+    urls:
+    - https://github.com/livepeer/livepeer-test-infra/releases/download/bgpm-0.2.0/bgpm-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-11-24T17:43:04.890405832Z"
     description: A Helm chart for Kubernetes
     digest: c064b826c0a8f202ffc4a6c752ea6dc224893e072e423d13dec88b2fa0557f66
