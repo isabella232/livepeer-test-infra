@@ -4,7 +4,7 @@ role: bgpm-service-reader
 clusterRole: bgpm-node-manager
 
 discord_webhook: ""
-pager_duty_api_key: ""
+pagerdutyIntegrationKey: ""
 
 image:
   repository: livepeerci/bgpm

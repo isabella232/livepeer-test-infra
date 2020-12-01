@@ -45,14 +45,16 @@ spec:
               value: {{ $.Values.discord_webhook | quote }}
             - name: MONITORED_REGION
               value: {{ $cluster.name | quote }}
-            - name: PAGER_DUTY_API_KEY
-              value: {{ $.Values.pager_duty_api_key | quote }}
+            - name: PAGERDUTY_INTEGRATION_KEY
+              value: {{ $.Values.pagerdutyIntegrationKey | quote }}
             - name: SAMPLE_MULTIPLIER
               value: "10"
             - name: SAMPLE_INTERVAL
               value: "1"
             - name: KUBECONFIG
               value: /etc/bpgm/kube/config
+            - name: KUBE_NAMESPACE
+              value: default
             - name: DELAY_BETWEEN_RUNS
               value: "30"
           resources:
