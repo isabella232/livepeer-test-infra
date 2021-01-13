@@ -30,15 +30,17 @@ spec:
         imagePullPolicy: Always
         env:
           - name: FLUENT_PAPERTRAIL_HOST
-            value: {{ .Values.papertrailHost }}
+            value: {{ .Values.papertrailHost | quote }}
           - name: FLUENT_PAPERTRAIL_PORT
-            value: {{ .Values.papertrailPort }}
+            value: {{ .Values.papertrailPort | quote }}
           - name: FLUENT_HOSTNAME
-            value: {{ .Values.fluentHostname }}
+            value: {{ .Values.fluentHostname | quote }}
           - name: K8S_NODE_NAME
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+          - name: RELEASE_REVISION
+            value: {{ .Release.Revision | quote }}
         resources:
           limits:
             cpu: 100m
