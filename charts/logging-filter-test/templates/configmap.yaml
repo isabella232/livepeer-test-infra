@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "logging-filter-test.fullname" . }}
+data:
+  entrypoint.sh: |-
+    #!/bin/sh
+    while true; do
+      echo "UDP data"
+      echo "UDP socket"
+      echo "OK"
+      sleep 4
+    done

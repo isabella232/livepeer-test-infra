@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logging-filter-test.fullname" . }}
+  labels:
+    {{- include "logging-filter-test.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "logging-filter-test.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "logging-filter-test.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: main
+          image: busybox
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          command:
+            - /bin/entrypoint.sh
+          volumeMounts:
+            - name: configmap
+              mountPath: /bin/entrypoint.sh
+              readOnly: true
+              subPath: entrypoint.sh
+      volumes:
+        - name: configmap
+          configMap:
+            name: {{ include "logging-filter-test.fullname" . | quote }}
+            defaultMode: 0700
