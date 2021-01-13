@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+  namespace: {{ .Release.Namespace }}
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: traefik-vol-{{ .Release.Revision }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: traefik-ingress-controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress-lb
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: config
+          configMap:
+            name: traefik-config 
+        - name: gcloud-service-account
+          secret:
+            secretName: traefik-dns01-solver
+        - name: traefik-vol
+          persistentVolumeClaim:
+            claimName: traefik-vol-{{ .Release.Revision }}
+      containers:
+      - image: traefik:v1.7.16
+        name: traefik-ingress-lb
+        volumeMounts:
+          - mountPath: "/config"
+            name: "config"
+          - mountPath: "/etc/service-account.json"
+            name: "gcloud-service-account"
+          - mountPath: "/ssl/acme"
+            name: "traefik-vol"
+        ports:
+        - name: http
+          containerPort: 80
+        - name: admin
+          containerPort: 8080
+        args:
+        - --api
+        - --kubernetes.ingressEndpoint=True
+        - --kubernetes.ingressendpoint.publishedservice={{ .Release.Namespace }}/traefik-ingress-service
+        - --configfile=/config/traefik.toml
+        - --kubernetes
+        - --logLevel=INFO
+        env:
+          - name: GCE_SERVICE_ACCOUNT_FILE
+            value: "/etc/service-account.json"
+          - name: GCE_PROJECT
+            value: {{ .Values.gceProjectId | quote }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik-ingress-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+    - protocol: TCP
+      port: 8080
+      name: admin
+    - protocol: TCP
+      port: 443
+      name: https
+  type: LoadBalancer
