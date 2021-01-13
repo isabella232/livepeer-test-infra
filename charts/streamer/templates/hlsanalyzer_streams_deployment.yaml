@@ -43,7 +43,7 @@ spec:
               path: /metrics
               port: http
           command:
-            - ./bin/hlsanalyzer-stream
+            - ./bin/long-cycle
           env:
             - name: LIVEPEER_API_KEY
               value: {{ $protocol.livepeer_api_key | quote }}
