@@ -67,6 +67,10 @@ spec:
               value: {{ $protocol.pager_duty_api_key | quote }}
             - name: PAGER_DUTY_COMPONENT
               value: {{ $protocol.pager_duty_component | quote }}
+            {{- if $stream.no_cdn }}
+            - name: PLAYBACK_SECRET
+              value: {{ required "PLAYBACK_SECRET required without CDN" $protocol.playback_secret | quote }}
+            {{- end }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
       terminationGracePeriodSeconds: 60
