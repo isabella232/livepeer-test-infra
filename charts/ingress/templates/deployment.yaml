@@ -82,7 +82,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: traefik-ingress-service
-  namespace: {{ .Release.Namespace }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.externalDNS.domainFilter }}
 spec:
   selector:
     k8s-app: traefik-ingress-lb

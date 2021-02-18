@@ -1,2 +1,5 @@
 gceProjectId: ""
 acmeEmail: ""
+externalDNS:
+  cloudflareToken: ""
+  domainFilter: "livepeer.fish"
