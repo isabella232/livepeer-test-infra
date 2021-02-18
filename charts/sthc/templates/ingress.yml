@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "sthc.fullname" . }}
+  labels:
+    {{- include "sthc.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    external-dns.alpha.kubernetes.io/target: test.livepeer.fish
+spec:
+  rules:
+  - host: "sthc.test.livepeer.fish"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: sthc
+            port:
+              number: 4567

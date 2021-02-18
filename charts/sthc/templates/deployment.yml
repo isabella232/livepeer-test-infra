@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sthc.fullname" . }}
+  labels:
+    {{- include "sthc.selectorLabels" $ | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "sthc.selectorLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sthc.selectorLabels" $ | nindent 8 }}
+      annotations: {}
+    spec:
+      initContainers:
+        - name: storage-file-setup
+          image: busybox:1.28
+          command: ["/bin/sh", "-c", "echo '{}' > /var/sthc/storage.json "]
+          volumeMounts:
+            - name: storage-volume 
+              mountPath: "/var/sthc"
+      containers:
+        - name: worker
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command:
+            - ./bin/sthc-worker
+          env:
+            - name: LIVEPEER_API_KEY
+              value: {{ $.Values.livepeerApiKey }}
+            - name: LIVEPEER_API_HOST
+              value: {{ $.Values.livepeerApiHost }}
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: storage-volume 
+              mountPath: "/var/sthc"
+        - name: server
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 4567
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          command:
+            - ./bin/sthc-server
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: storage-volume 
+              mountPath: "/var/sthc"
+      volumes:
+      - name: storage-volume
+        emptyDir: {}
+      terminationGracePeriodSeconds: 10

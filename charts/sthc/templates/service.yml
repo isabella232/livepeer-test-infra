@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sthc.fullname" . }}
+  labels:
+    {{- include "sthc.labels" . | nindent 4 }}
+spec:
+  externalTrafficPolicy: Local
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 4567
+  selector:
+    {{- include "sthc.selectorLabels" . | nindent 4 }}
+  sessionAffinity: None
+  type: LoadBalancer
