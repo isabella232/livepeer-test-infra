@@ -5,3 +5,5 @@ image:
 
 livepeerApiKey: ""
 livepeerApiHost: ""
+frequency: 30
+maxBroadcasterListAge: 3600

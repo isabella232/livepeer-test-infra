@@ -34,6 +34,10 @@ spec:
               value: {{ $.Values.livepeerApiKey }}
             - name: LIVEPEER_API_HOST
               value: {{ $.Values.livepeerApiHost }}
+            - name: FREQUENCY
+              value: {{ $.Values.frequency | quote }}
+            - name: MAX_BROADCASTER_LIST_AGE
+              value: {{ $.Values.maxBroadcasterListAge | quote }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
