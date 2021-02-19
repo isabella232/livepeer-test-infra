@@ -24,7 +24,7 @@ spec:
             - name: storage-volume 
               mountPath: "/var/sthc"
       containers:
-        - name: worker
+        - name: sthc-worker
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           command:
@@ -39,7 +39,7 @@ spec:
           volumeMounts:
             - name: storage-volume 
               mountPath: "/var/sthc"
-        - name: server
+        - name: sthc-server
           image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           ports:
