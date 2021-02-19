@@ -1,5 +1,4 @@
----
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ include "sthc.fullname" . }}
@@ -13,10 +12,7 @@ spec:
   - host: "sthc.test.livepeer.fish"
     http:
       paths:
-      - pathType: Prefix
-        path: "/"
+      - path: /
         backend:
-          service:
-            name: sthc
-            port:
-              number: 4567
+          serviceName: sthc
+          servicePort: 80
