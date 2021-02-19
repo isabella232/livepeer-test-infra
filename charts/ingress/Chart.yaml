@@ -1,7 +1,0 @@
-apiVersion: v2
-name: ingress
-description: |
-  ingress controller for livepeer-test-infra
-type: application
-version: 0.2.0
-appVersion: 1.0.0
