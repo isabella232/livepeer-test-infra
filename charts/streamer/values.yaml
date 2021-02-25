@@ -74,7 +74,7 @@ http:
   apiServer: ""
   region: mdw
 
-hlsanalyzer:
+longCycles:
   image:
     repository: livepeerci/stream-monitor
     pullPolicy: IfNotPresent
@@ -94,11 +94,15 @@ hlsanalyzer:
   # The test streams to run in this release. Configuration can be provided as an array
   # with the following item schema
   #
-  # - name: "the human name for this test stream"
-  #   duration: "the length of each steam cycle"
+  # - playback_region: nyc
+  #   ingest_region: nyc
+  #   broadcast_duration: "18000"
+  #   boot_delay: "44"
+  #   name: long-nyc
+  #   secondary_regions: "mdw lon"
   streams: []
 
-pulse:
+shortCycles:
   image:
     repository: livepeerci/stream-monitor
     pullPolicy: IfNotPresent

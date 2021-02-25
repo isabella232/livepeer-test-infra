@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- $protocol := .Values.hlsanalyzer -}}
+{{- $protocol := .Values.shortCycles -}}
 
 {{- range $protocol.streams }}
 {{- $stream := . -}}
@@ -22,7 +22,7 @@ spec:
       labels:
         {{- include "streamer.streamerLabels" $data | nindent 8 }}
       annotations:
-        prometheus.io/scrape: "true"
+        prometheus.io/{{ $.Values.global.promKubeScrape | default "scrape" }}: "true"
         prometheus.io/port: "9090"
         prometheus.io/path: "/metrics"
     spec:
@@ -43,7 +43,7 @@ spec:
               path: /metrics
               port: http
           command:
-            - ./bin/long-cycle
+            - ./bin/short-cycle
           env:
             - name: LIVEPEER_API_KEY
               value: {{ $protocol.livepeer_api_key | quote }}
@@ -56,11 +56,9 @@ spec:
             - name: DISCORD_WEBHOOK
               value: {{ $protocol.discord_webhook | quote }}
             - name: PLAYBACK_REGION
-              value: {{ $stream.playback_region | quote }}
+              value: {{ $stream.playback_region }}
             - name: INGEST_REGION
-              value: {{ $stream.ingest_region | quote }}
-            - name: INGEST_REGION
-              value: {{ $stream.ingest_region | quote }}
+              value: {{ $stream.ingest_region }}
             - name: BROADCAST_DURATION
               value: {{ $stream.broadcast_duration | quote }}
             - name: BOOT_DELAY
