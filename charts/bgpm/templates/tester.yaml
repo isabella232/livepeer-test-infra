@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $.Values.name }}-monitor-{{ $cluster.name }}
+  name: {{ $.Values.name }}-tester-{{ $cluster.name }}
   labels:
     {{- include "bgpm.testerSelectorLabels" $ | nindent 4 }}
 spec:
@@ -48,7 +48,7 @@ spec:
             - name: PAGERDUTY_INTEGRATION_KEY
               value: {{ $.Values.pagerdutyIntegrationKey | quote }}
             - name: SAMPLE_MULTIPLIER
-              value: "10"
+              value: {{ $.Values.sampleMultiplier | quote }}
             - name: SAMPLE_INTERVAL
               value: "1"
             - name: KUBECONFIG

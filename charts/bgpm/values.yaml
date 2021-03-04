@@ -15,3 +15,5 @@ installExporter: false
 
 # adding a cluster implies we want to install monitors
 clusters: []
+
+sampleMultiplier: 10
