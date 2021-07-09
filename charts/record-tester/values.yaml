@@ -72,5 +72,6 @@ recordings:
   pause_duration:
   continuous_test:
   video:
+  mp4:
 
   regions: []

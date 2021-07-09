@@ -63,6 +63,8 @@ spec:
               value: {{ $protocol.pager_duty_integration_key | quote }}
             - name: RT_PAGERDUTY_COMPONENT
               value: {{ $protocol.pager_duty_component | quote }}
+            - name: RT_MP4
+              value: {{ $protocol.mp4 | quote }}
             - name: RT_V
               value: "4"
           resources:
