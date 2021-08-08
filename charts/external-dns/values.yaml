@@ -1,0 +1,16 @@
+external-dns:
+  enabled: true
+  interval: 5m0s
+  annotationFilter: "livepeer.fish/external-dns=true"
+  publishHostIP: true
+  sources:
+    # - crd
+    - service
+    - ingress
+
+  ## DNS provider where the DNS records will be created. Available providers are:
+  ## - alibabacloud, aws, azure, azure-private-dns, cloudflare, coredns, designate, digitalocean, google, infoblox, rfc2136, transip
+  ##
+  provider: cloudflare
+  cloudflare:
+    proxied: false
