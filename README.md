@@ -1,5 +1,10 @@
 # livepeer-test-infra
 
+### ingress controller
+kubectl apply -f values/ingress-controller-config.yml
+helm upgrade --install ingress-controller ./charts/ingress-controller -f values/ingress-controller.yml 
+
+
 ### external-dns
 
 helm upgrade --install external-dns ./charts/external-dns -f values/external-dns.yaml
