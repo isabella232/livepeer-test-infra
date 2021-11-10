@@ -15,6 +15,19 @@ helm uninstall external-dns
 helm upgrade --install http-echo-1 ./charts/http-echo
 helm uninstall http-echo-1
 
+### cdn-log-puller
+
+
+#### create secret
+kubectl apply -f values/cdn-puller-config.yaml
+
+helm install --dry-run --debug cdn-puller-st ./charts/cdn-puller -f values/cdn-puller-staging.yaml
+helm install  --debug cdn-puller-st ./charts/cdn-puller -f values/cdn-puller-staging.yaml
+
+
+helm uninstall  --debug cdn-puller-st
+
+
 #### metabase
 helm upgrade --install metabase ./charts/metabase -f values/metabase.yaml
 helm install --dry-run --debug metabase ./charts/metabase -f values/metabase.yaml

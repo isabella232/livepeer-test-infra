@@ -1,0 +1,52 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "cdn-puller.fullname" . }}
+spec:
+  schedule: "{{ .Values.cdnPuller.schedule }}"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      parallelism: 1
+      template:
+        spec:
+          volumes:
+            - name: config
+              configMap:
+                name: {{ include "cdn-puller.fullname" . }}-config
+            - name: creds
+              secret:
+                secretName: cdn-puller-bucket-key
+                # items:
+                #   - key: creds
+                #     paths: /root/creds
+          containers:
+          - name: cdn-pull
+            image: livepeer/cdn-log-puller:latest
+            imagePullPolicy: Always
+            env:
+              - name: CP_API_KEY
+                value: {{ .Values.cdnPuller.livepeer_api_key }}
+              - name: CP_API_URL
+                value: {{ .Values.cdnPuller.livepeer_api_url }}
+              - name: CP_API_BUCKET
+                value: {{ .Values.cdnPuller.bucket }}
+              - name: CP_CONFIG
+                value: /root/config.yaml
+              - name: CP_STAGING
+                value: {{ .Values.cdnPuller.staging | quote }}
+              - name: CP_CREDS
+                value: /etc/creds/creds
+            command:
+                - /root/cdn-pull
+            args:
+                - -v
+                - "14"
+            volumeMounts:
+              - name: config
+                mountPath: "/root"
+              - name: creds
+                mountPath: "/etc/creds"
+          restartPolicy: OnFailure
+
+---

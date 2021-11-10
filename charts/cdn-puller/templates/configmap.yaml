@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cdn-puller.fullname" . }}-config
+  labels:
+    livepeer.live/app: {{ include "cdn-puller.fullname" . }}
+data:
+  config.yaml: |-
+    names:
+        a4k8m2i7: fra
+        n4a8j7t5: lax
+        d2i6e2c9: cgh
+        x2d2n8e4: lon
+        m9w3b4i3: mdw
+        p9r6z5b8: nyc
+        t3d6m7q5: prg
+        g5y4k7k7: fra-monster
+        k8y2c6p6: fra-rec
+        b7d9m8h2: fra-rec-monster
+        q8t6v2g7: lax-monster
+        d7h2j7t9: lon-monster
+        u6w7g5v7: lon-rec
+        x3t3i5s2: mdw-monster
+        g5i2j7h3: mdw-rec-monster
+        n6f3q4x6: nyc-monster
+        j4r4i5x2: nyc-rec
+        b8t4h9a2: prg-monster
+        u2a9f9h7: sin
+        d9s5k9j7: sin-monster
+        q4j4z3x8: sin-rec
+        w5r6m5f2: sao
+        i6g2r3k3: sao-monster
+        k3c3y8z2: cdn
+        #k3c3y8z2: cdn.livepeer.com
+        #i4f7b9d3: mist-test.lp-distro.com
+        e2f5s9a7: cdn-monster
+        #e2f5s9a7: cdn.livepeer.monster (origin.livepeer.monster)
+        #c9g9v8x2: byocdn-test.livepeer.monster
+        #t8a6c4p8: chiv0sp.lp-distro.com
+        #q9z8s5a5: ll-hls-test.livepeer.fish
+        #n8j5i9j4: llhls-test.livepeer.fish
+
+---
