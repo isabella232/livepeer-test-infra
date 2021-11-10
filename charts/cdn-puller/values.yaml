@@ -55,7 +55,7 @@ affinity: {}
 
 
 cdnPuller:
-  schedule: "*/1 * * * *"
+  schedule: "*/15 * * * *"
   livepeer_api_key:
   livepeer_api_url:
   staging: true

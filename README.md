@@ -21,11 +21,13 @@ helm uninstall http-echo-1
 #### create secret
 kubectl apply -f values/cdn-puller-config.yaml
 
+#### staging
 helm install --dry-run --debug cdn-puller-st ./charts/cdn-puller -f values/cdn-puller-staging.yaml
 helm install  --debug cdn-puller-st ./charts/cdn-puller -f values/cdn-puller-staging.yaml
-
-
 helm uninstall  --debug cdn-puller-st
+#### prod
+helm upgrade --install   cdn-puller-prod ./charts/cdn-puller -f values/cdn-puller-prod.yaml
+helm uninstall  --debug cdn-puller-prod
 
 
 #### metabase
