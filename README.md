@@ -9,3 +9,8 @@ helm uninstall external-dns
 
 helm upgrade --install http-echo-1 ./charts/http-echo
 helm uninstall http-echo-1
+
+#### metabase
+helm upgrade --install metabase ./charts/metabase -f values/metabase.yaml
+helm install --dry-run --debug metabase ./charts/metabase -f values/metabase.yaml
+helm uninstall metabase
