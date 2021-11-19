@@ -1,5 +1,10 @@
 # livepeer-test-infra
 
+### record tester
+
+helm upgrade --install record-tester ./charts/record-tester -f values/record-tester.yaml
+helm uninstall record-tester
+
 ### ingress controller
 kubectl apply -f values/ingress-controller-config.yml
 helm upgrade --install ingress-controller ./charts/ingress-controller -f values/ingress-controller.yml 
@@ -34,3 +39,12 @@ helm uninstall  --debug cdn-puller-prod
 helm upgrade --install metabase ./charts/metabase -f values/metabase.yaml
 helm install --dry-run --debug metabase ./charts/metabase -f values/metabase.yaml
 helm uninstall metabase
+
+### simple http server
+
+servers dir `/usr/share/nginx/html` from inside container
+available at `simple.test.livepeer.fish`
+
+
+helm upgrade --install simple-http-server ./charts/simple-http-server
+helm uninstall simple-http-server
