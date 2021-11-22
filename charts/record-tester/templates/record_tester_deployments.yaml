@@ -1,0 +1,86 @@
+{{- $root := . -}}
+{{- $protocol := .Values.recordings -}}
+
+{{- range $protocol.regions }}
+{{- $region := . -}}
+{{- $data := (dict "root" $root "region" $region "protocol" $protocol)  -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "record-tester.nameWithRegion" $data }}
+  labels:
+    {{- include "record-tester.labels" $ | nindent 4 }}
+    {{- include "record-tester.testerLabels" $data | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "record-tester.testerLabels" $data | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "record-tester.testerLabels" $data | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: "{{ $protocol.image.repository }}:{{ $protocol.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $protocol.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          command:
+            - /root/recordtester
+          env:
+            - name: RT_API_TOKEN
+              value: {{ $protocol.livepeer_api_key | quote }}
+            - name: RT_API_SERVER
+              value: {{ $region }}.{{ $protocol.livepeer_api_host }}
+            - name: RT_TEST_DUR
+              value: {{ $protocol.test_duration | quote }}
+            - name: RT_PAUSE_DUR
+              value: {{ $protocol.pause_duration | quote }}
+            - name: RT_CONTINUOUS_TEST
+              value: {{ $protocol.continuous_test | quote }}
+            - name: RT_DISCORD_URL
+              value: {{ $protocol.discord_webhook | quote }}
+            - name: RT_DISCORD_USERS
+              value: {{ join "," $protocol.discord_users_to_ping | quote }}
+            - name: RT_DISCORD_USER_NAME
+              value: {{ $protocol.discord_user_name | quote }}
+            - name: RT_FILE
+              value: {{ $protocol.video | quote }}
+            - name: RT_PAGERDUTY_INTEGRATION_KEY
+              value: {{ $protocol.pager_duty_integration_key | quote }}
+            - name: RT_PAGERDUTY_COMPONENT
+              value: {{ $protocol.pager_duty_component | quote }}
+            - name: RT_MP4
+              value: {{ $protocol.mp4 | quote }}
+            - name: RT_V
+              value: "4"
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+      terminationGracePeriodSeconds: 60
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
