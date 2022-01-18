@@ -74,3 +74,14 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the list of endpoints for the analyzer based on regions and API endpoint.
+*/}}
+{{- define "record-tester.analyzer-endpoints" -}}
+{{- $endpoints := list .livepeer_api_host -}}
+{{- range $i, $region := prepend .regions "origin" -}}
+  {{- $endpoints = append $endpoints (printf "%s.%s" $region $.livepeer_api_host) -}}
+{{- end }}
+{{- $endpoints | join "," -}}
+{{- end }}

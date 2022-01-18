@@ -45,6 +45,8 @@ spec:
               value: {{ $protocol.livepeer_api_key | quote }}
             - name: RT_API_SERVER
               value: {{ $region }}.{{ $protocol.livepeer_api_host }}
+            - name: RT_ANALYZER_SERVERS
+              value: {{ include "record-tester.analyzer-endpoints" $protocol | quote }}
             - name: RT_TEST_DUR
               value: {{ $protocol.test_duration | quote }}
             - name: RT_PAUSE_DUR
@@ -65,6 +67,8 @@ spec:
               value: {{ $protocol.pager_duty_component | quote }}
             - name: RT_MP4
               value: {{ $protocol.mp4 | quote }}
+            - name: RT_STREAM_HEALTH
+              value: {{ $protocol.stream_health | quote }}
             - name: RT_V
               value: "4"
           resources:
