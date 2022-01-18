@@ -23,13 +23,8 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
-
 {{- define "record-tester.nameWithRegion" -}}
-{{- if contains .root.Chart.Name .root.Release.Name }}
-{{- printf "%s-%s" .root.Release.Name .region | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s-%s" .root.Release.Name .root.Chart.Name .region | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- list (include "record-tester.fullname" .root) .ecosystem .region | join "-" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -42,6 +37,7 @@ Create chart name and version as used by the chart label.
 {{- define "record-tester.testerLabels" -}}
 app.kubernetes.io/instance: {{ .root.Release.Name }}
 test.livepeer.org/region: {{ .region }}
+test.livepeer.org/ecosystem: {{ .ecosystem }}
 {{- end }}
 
 {{/*
@@ -80,7 +76,7 @@ Create the list of endpoints for the analyzer based on regions and API endpoint.
 */}}
 {{- define "record-tester.analyzer-endpoints" -}}
 {{- $endpoints := list .livepeer_api_host -}}
-{{- range $i, $region := prepend .regions "origin" -}}
+{{- range $region := keys .regions | sortAlpha | concat (list "origin") -}}
   {{- $endpoints = append $endpoints (printf "%s.%s" $region $.livepeer_api_host) -}}
 {{- end }}
 {{- $endpoints | join "," -}}

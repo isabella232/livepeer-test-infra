@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "Deploying on GKE (cluster-1 @ us-east4-a)"
+helm --kube-context=gke_livepeer-test_us-east4-a_cluster-1 upgrade --install record-tester ./charts/record-tester -f values/record-tester.yaml -f values/record-tester.gcp.yaml
+
+echo "Deploying on Datapacket (sandbox)"
+helm --kube-context=sandbox upgrade --install record-tester ./charts/record-tester -f values/record-tester.yaml -f values/record-tester.sandbox.yaml

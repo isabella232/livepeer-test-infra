@@ -1,9 +1,14 @@
 {{- $root := . -}}
-{{- $protocol := .Values.recordings -}}
+{{- $rootProtocol := .Values.recordings -}}
 
-{{- range $protocol.regions }}
-{{- $region := . -}}
-{{- $data := (dict "root" $root "region" $region "protocol" $protocol)  -}}
+{{- range $ecosystem, $ecOverrides := $rootProtocol.ecosystems }}
+{{- $ecoProtocol := mergeOverwrite dict $rootProtocol $ecOverrides -}}
+
+{{- range $region, $regiOverrides := $ecoProtocol.regions }}
+{{- $protocol := mergeOverwrite dict $ecoProtocol $regiOverrides -}}
+
+{{- if not $protocol.disabled }}
+{{- $data := (dict "root" $root "ecosystem" $ecosystem "region" $region "protocol" $protocol)  -}}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -65,12 +70,14 @@ spec:
               value: {{ $protocol.pager_duty_integration_key | quote }}
             - name: RT_PAGERDUTY_COMPONENT
               value: {{ $protocol.pager_duty_component | quote }}
+            - name: RT_PAGERDUTY_LOW_URGENCY
+              value: {{ $protocol.pager_duty_low_urgency | toString | quote }}
             - name: RT_MP4
               value: {{ $protocol.mp4 | quote }}
             - name: RT_STREAM_HEALTH
               value: {{ $protocol.stream_health | quote }}
             - name: RT_V
-              value: "4"
+              value: {{ $protocol.log_verbosity | quote }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
       terminationGracePeriodSeconds: 60
@@ -87,4 +94,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ---
+{{- end }}
+{{- end }}
 {{- end }}

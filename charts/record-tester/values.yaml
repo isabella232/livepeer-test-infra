@@ -57,22 +57,24 @@ recordings:
     repository: livepeer/streamtester
     pullPolicy: Always
     tag: "record-tester"
+  ecosystems: {}
+  regions: {}
 
   livepeer_api_key:
   livepeer_api_host:
 
   discord_webhook:
   discord_users_to_ping: []
-  discord_user_name: 'record tester'
+  discord_user_name: "Record Tester"
 
-  pager_duty_component: "record-tester"
+  pager_duty_component: "Record Tester"
   pager_duty_integration_key: ""
+  pager_duty_low_urgency: false
 
+  log_verbosity: "4"
   test_duration:
   pause_duration:
   continuous_test:
   video:
   mp4:
   stream_health:
-
-  regions: []
