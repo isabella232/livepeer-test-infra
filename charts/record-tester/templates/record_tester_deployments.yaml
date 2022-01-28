@@ -76,6 +76,8 @@ spec:
               value: {{ $protocol.mp4 | quote }}
             - name: RT_STREAM_HEALTH
               value: {{ $protocol.stream_health | quote }}
+            - name: RT_RECORD_OBJECT_STORE_ID
+              value: {{ $protocol.record_object_store_id | quote }}
             - name: RT_V
               value: {{ $protocol.log_verbosity | quote }}
           resources:

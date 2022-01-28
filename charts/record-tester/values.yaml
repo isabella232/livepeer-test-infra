@@ -78,3 +78,4 @@ recordings:
   video:
   mp4:
   stream_health:
+  record_object_store_id:
